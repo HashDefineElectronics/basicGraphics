@@ -8,10 +8,21 @@
 #ifndef __BASIC_GRAPHICS_H__
 #define __BASIC_GRAPHICS_H__
 
+	#include <string.h>
+	#include <stdio.h>
 	#include <stdint.h>
+	#include "stdbool.h"
 	#include "Fonts/gfxfont.h"
 	#include "displayDriver.h"
 
+	/**
+	 * Defines the standard graphics functuion return types.
+	 */
+	typedef enum GraphicsReturnType {
+		BasicGReturned_OK = 0,
+		BasicGReturned_Error,
+		RBasicGReturned_InvalidPointer
+	} GraphicsReturnType;
 
 	/**
 	 * defines our simple graphics structure

@@ -2,7 +2,7 @@
  * basicGraphics.c
  *
  *  Created on: Dec 18, 2018
- *      Author: Ronald Susa
+ *      Author: Ronald Sousa https://hashdefineelectronics.com
  *
  * This is the a simple graphics library for drawing primitives, fonts and bitmaps
  */
@@ -11,7 +11,7 @@
 /**
  * Holds the current fonts
  */
-static const GFXfont * CurrentFont = NULL;
+static const GFXfont * CurrentFont =  ((void*)0);
 
 /**
  * Holds the display driver
@@ -41,7 +41,7 @@ static void Init(DisplayInterfaceType * driver, const GFXfont * font) {
  * @param yPos pointer to the Y axis position
  * @param colour this is the colour that the text will be drawn as. Current only support monotone which is TRUE or FALSE.
  */
-static StandardReturnType renderCharacter(	GFXglyph *glyph,
+static GraphicsReturnType renderCharacter(	GFXglyph *glyph,
 											uint8_t  *bitmap,
 											uint8_t character,
 											uint_fast8_t *xPos,
@@ -50,7 +50,7 @@ static StandardReturnType renderCharacter(	GFXglyph *glyph,
 
 	if(!CurrentFont || !Driver || !Driver->SetPixel) {
 		// invalid pointer
-		return ReturnedType_InvalidPointer;
+		return RBasicGReturned_InvalidPointer;
 	}
 
 	uint_fast8_t Height = glyph->height;
@@ -88,7 +88,7 @@ static StandardReturnType renderCharacter(	GFXglyph *glyph,
 		}
 	}
 
-	return ReturnedType_OK;
+	return BasicGReturned_OK;
 }
 
 /*
@@ -137,7 +137,7 @@ static void Destroy(void) {
 	if(!Driver || !Driver->Close) {
 		return;
 	}
-	Driver->Close(TRUE);
+	Driver->Close(true);
 }
 
 /**
