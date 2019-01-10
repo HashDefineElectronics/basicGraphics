@@ -32,7 +32,7 @@
 		void (*Destroy) (void);
 		void (*Clear)(void);
 		void (*Flush)(void);
-		void (*WriteString)(uint8_t * text, uint_fast8_t xPos, uint_fast8_t yPos, uint_fast8_t colour);
+		void (*WriteString)(uint8_t * text, uint32_t xPos, uint32_t yPos, uint_fast8_t colour);
 	} SimpleGraphcisType;
 
 

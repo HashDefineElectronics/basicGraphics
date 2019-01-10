@@ -44,8 +44,8 @@ static void Init(DisplayInterfaceType * driver, const GFXfont * font) {
 static GraphicsReturnType renderCharacter(	GFXglyph *glyph,
 											uint8_t  *bitmap,
 											uint8_t character,
-											uint_fast8_t *xPos,
-											uint_fast8_t *yPos,
+											uint32_t *xPos,
+											uint32_t *yPos,
 											uint_fast8_t colour) {
 
 	if(!CurrentFont || !Driver || !Driver->SetPixel) {
@@ -56,8 +56,8 @@ static GraphicsReturnType renderCharacter(	GFXglyph *glyph,
 	uint_fast8_t Height = glyph->height;
 	uint_fast8_t Width = glyph->width;
 
-	int8_t   xOffset = glyph->xOffset;
-	int8_t yOffset = glyph->yOffset;
+	uint32_t xOffset = glyph->xOffset;
+	uint32_t yOffset = glyph->yOffset;
 
 	uint8_t  BitIndex = 0;
 
@@ -65,8 +65,8 @@ static GraphicsReturnType renderCharacter(	GFXglyph *glyph,
 	// this has the section of bits that make up the character.
 	uint8_t Segment = 0;
 
-	uint_fast8_t YIndex;
-	uint_fast8_t XIndex;
+	uint32_t YIndex;
+	uint32_t XIndex;
 
 
 	/// @Todo Add character clipping here
@@ -99,7 +99,7 @@ static GraphicsReturnType renderCharacter(	GFXglyph *glyph,
  * @param yPos is the Y axis position. Note that yPos is draw from bottom up which mean that the minimum yPos should be the text height
  * @param colour this is the colour that the text will be drawn as. Current only support monotone which is TRUE or FALSE.
  */
-static void WriteString(uint8_t * text, uint_fast8_t xPos, uint_fast8_t yPos, uint_fast8_t colour) {
+static void WriteString(uint8_t * text, uint32_t xPos, uint32_t yPos, uint_fast8_t colour) {
 	GFXglyph *Glyph;
 	uint8_t  *Bitmap;
 	uint8_t TempChar;

@@ -15,7 +15,8 @@
 	 */
 	typedef enum monotoneColour {
 		ColourOff = 0,
-		ColourOn = 0,
+		ColourMid = 0x07,
+		ColourOn = 0x0F
 	} monotoneColour;
 
 	/**
