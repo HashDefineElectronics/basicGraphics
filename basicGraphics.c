@@ -32,6 +32,75 @@ static void Init(DisplayInterfaceType * driver, const GFXfont * font) {
 }
 
 /**
+ * this function will return the give text height and width bound.
+ *
+ * @param text is the pointer to the string to find screen bound
+ * @param font is the font pointer
+ * @param bounds pointer to return the new bound values
+ */
+static void getStringBounds(uint8_t * text, const GFXfont * font, basicStringBoundType * bounds) {
+	GFXglyph *Glyph;
+	uint8_t  *Bitmap;
+	uint8_t TempChar;
+	GFXfont * Font = font;
+
+	uint32_t YTemp;
+	uint32_t XTemp;
+
+	bounds->x = 0;
+	bounds->y = 0;
+	bounds->xMin = 0;
+	bounds->yMin = 0;
+	bounds->xMax = 0;
+	bounds->yMax = 0;
+
+	if(!bounds) {
+		return;
+	}
+
+	if(!Font) {
+		if(!CurrentFont) {
+			/// @TODO return invalid pointer error
+			return;
+		}
+		Font = CurrentFont;
+	}
+
+	while(*text) {
+		TempChar = *text;
+
+		// make sure that we can render the character
+		if(TempChar != '\r' && TempChar >= Font->first && TempChar <= Font->last ) {
+
+			TempChar -= Font->first;
+			Glyph  = &Font->glyph[TempChar];
+
+			XTemp = bounds->x + Glyph->xOffset;
+			if(XTemp < bounds->xMin) {
+				 bounds->xMin = XTemp;
+			}
+
+			XTemp += Glyph->width;
+			if(XTemp > bounds->xMax) {
+				 bounds->xMax = XTemp;
+			}
+			bounds->x += Glyph->xAdvance;
+
+			YTemp = bounds->y +  Glyph->yOffset;
+			if(YTemp < bounds->yMin) {
+				 bounds->yMin = YTemp;
+			}
+
+			YTemp += Glyph->height;
+			if(YTemp > bounds->yMax) {
+				 bounds->yMax = YTemp;
+			}
+		}
+
+		text++;
+	}
+}
+/**
  * handles rendering the character with the given font.
  *
  * @param glyph pointer to the character data structure
@@ -99,28 +168,33 @@ static GraphicsReturnType renderCharacter(	GFXglyph *glyph,
  * @param yPos is the Y axis position. Note that yPos is draw from bottom up which mean that the minimum yPos should be the text height
  * @param colour this is the colour that the text will be drawn as. Current only support monotone which is TRUE or FALSE.
  */
-static void WriteString(uint8_t * text, uint32_t xPos, uint32_t yPos, uint_fast8_t colour) {
+static void WriteString(uint8_t * text, uint32_t xPos, uint32_t yPos, uint_fast8_t colour, const GFXfont * fontToUse) {
 	GFXglyph *Glyph;
 	uint8_t  *Bitmap;
 	uint8_t TempChar;
+	GFXfont * Font = fontToUse;
 
 	if(!CurrentFont || !Driver || !Driver->SetPixel) {
 		/// @TODO return invalid pointer error
 		return;
 	}
 
+	if(!Font) {
+		Font = CurrentFont;
+	}
+
 	while(*text) {
 		TempChar = *text;
 
 		// make sure that we can render the character
-		if(TempChar >= CurrentFont->first && TempChar <= CurrentFont->last ) {
+		if(TempChar >= Font->first && TempChar <= Font->last ) {
 
-			TempChar -= CurrentFont->first;
-			Glyph  = &CurrentFont->glyph[TempChar];
+			TempChar -= Font->first;
+			Glyph  = &Font->glyph[TempChar];
 
 			// make sure that we aren't trying to render an empty character
 			if(Glyph->width && Glyph->height) {
-				Bitmap = CurrentFont->bitmap;
+				Bitmap = Font->bitmap;
 				renderCharacter(Glyph, Bitmap, TempChar, &xPos, &yPos, colour);
 			}
 			xPos += Glyph->xAdvance;
@@ -160,14 +234,14 @@ static void Flush(void) {
 	}
 	Driver->Sync();
 }
-
 /**
  * This is our graphics instance
  */
 SimpleGraphcisType GraphicsInstance = {
-		Init,
-		Destroy,
-		Clear,
-		Flush,
-		WriteString,
+		Init: Init,
+		Destroy: Destroy,
+		Clear: Clear,
+		Flush: Flush,
+		WriteString: WriteString,
+		GetStringBounds: getStringBounds
 };

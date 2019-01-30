@@ -16,6 +16,18 @@
 	#include "displayDriver.h"
 
 	/**
+	 * defines the data structure for working out the a string bound based on a given font
+	 */
+	typedef struct {
+		uint32_t x;
+		uint32_t y;
+		uint32_t xMin;
+		uint32_t yMin;
+		uint32_t xMax;
+		uint32_t yMax;
+	} basicStringBoundType;
+
+	/**
 	 * Defines the standard graphics functuion return types.
 	 */
 	typedef enum GraphicsReturnType {
@@ -32,7 +44,8 @@
 		void (*Destroy) (void);
 		void (*Clear)(void);
 		void (*Flush)(void);
-		void (*WriteString)(uint8_t * text, uint32_t xPos, uint32_t yPos, uint_fast8_t colour);
+		void (*WriteString)(uint8_t * text, uint32_t xPos, uint32_t yPos, uint_fast8_t colour, const GFXfont * fontToUse);
+		void (*GetStringBounds)(uint8_t * text, const GFXfont * font, basicStringBoundType * bounds);
 	} SimpleGraphcisType;
 
 
