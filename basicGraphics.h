@@ -46,6 +46,7 @@
 		void (*Flush)(void);
 		void (*WriteString)(uint8_t * text, uint32_t xPos, uint32_t yPos, uint_fast8_t colour, const GFXfont * fontToUse);
 		void (*GetStringBounds)(uint8_t * text, const GFXfont * font, basicStringBoundType * bounds);
+		void (*drawLine)(uint32_t xStart, uint32_t yStart, uint32_t xEnd, uint32_t yEnd, uint_fast8_t colour);
 	} SimpleGraphcisType;
 
 

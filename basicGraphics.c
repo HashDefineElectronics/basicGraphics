@@ -234,6 +234,61 @@ static void Flush(void) {
 	}
 	Driver->Sync();
 }
+
+/**
+ * This function implements the line drawing using Bresenham's line algorithm.
+ *
+ * @note This code was inspired by https://rosettacode.org/wiki/Bitmap/Bresenham%27s_line_algorithm#C
+ *
+ * @param xStart This is the X start position.
+ * @param yStart This is the Y start position.
+ * @param xEnd This is the X end position.
+ * @param yEnd This is the Y end position.
+ * @param colour the pixel colour value
+ */
+static void drawLine(uint32_t xStart, uint32_t yStart, uint32_t xEnd, uint32_t yEnd, uint_fast8_t colour) {
+
+	// make sure that have a driver that we can use
+	if(!Driver || !Driver->SetPixel) {
+		return;
+	}
+
+	// take the difference between the start and end axis
+    int32_t DeltaX = abs(xEnd - xStart);
+    int32_t DeltaY = abs(yEnd - yStart);
+
+    // This get which direction we draw the line.
+    int32_t OffestX = xStart < xEnd ? 1 : -1;
+    int32_t OffestY = yStart < yEnd ? 1 : -1;
+
+    // this is the expected worse error
+    int32_t DeltaError = ((DeltaX > DeltaY ? DeltaX : -DeltaY) / 2);
+
+    // this is the current line error
+    int32_t Error;
+
+    for(;;) {
+        Driver->SetPixel(xStart, yStart, colour);
+
+        if (xStart == xEnd && yStart == yEnd) {
+        	break; // we made it to the end point, let get out
+        }
+
+        // update our error
+        Error = DeltaError;
+
+        // update Y axis error and position
+        if (Error > -DeltaX) {
+        	DeltaError -= DeltaY;
+        	xStart += OffestX;
+        }
+        // update Y axis error and position
+        if (Error < DeltaY) {
+        	DeltaError += DeltaX;
+        	yStart += OffestY;
+        }
+    }
+}
 /**
  * This is our graphics instance
  */
@@ -243,5 +298,6 @@ SimpleGraphcisType GraphicsInstance = {
 		Clear: Clear,
 		Flush: Flush,
 		WriteString: WriteString,
-		GetStringBounds: getStringBounds
+		GetStringBounds: getStringBounds,
+		drawLine: drawLine
 };
