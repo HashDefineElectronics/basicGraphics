@@ -340,13 +340,18 @@ static void Open(GenericComInterface * interface) {
 	Sync();
 }
 
+
+
 /**
  * defines the SSD1306 driver layer
  */
 struct DisplayInterfaceType SSD1306 = {
-	Open,
-	Close,
-	Sync,
-	SetPixel,
-	Clear,
-	Fill};
+	Width: SCREEN_WIDTH,
+	Height: SCREEN_HEIGHT,
+	Open: Open,
+	Close: Close,
+	Sync: Sync,
+	SetPixel: SetPixel,
+	Clear: Clear,
+	Fill: Fill
+};

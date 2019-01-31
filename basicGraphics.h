@@ -46,7 +46,10 @@
 		void (*Flush)(void);
 		void (*WriteString)(uint8_t * text, uint32_t xPos, uint32_t yPos, uint_fast8_t colour, const GFXfont * fontToUse);
 		void (*GetStringBounds)(uint8_t * text, const GFXfont * font, basicStringBoundType * bounds);
-		void (*drawLine)(uint32_t xStart, uint32_t yStart, uint32_t xEnd, uint32_t yEnd, uint_fast8_t colour);
+		void (*drawLine)(int32_t xStart, int32_t yStart, int32_t xEnd, int32_t yEnd, uint_fast8_t colour);
+		void (*drawCircle)(int32_t x0, int32_t y0, int32_t radius, uint_fast8_t colour, uint_fast8_t fill);
+		void (*drawRectagle)(int32_t xStart, int32_t yStart, int32_t xEnd, int32_t yEnd, uint_fast8_t colour, uint_fast8_t fill);
+		void (*Fill)(monotoneColour value);
 	} SimpleGraphcisType;
 
 

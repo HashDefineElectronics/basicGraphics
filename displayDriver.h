@@ -33,6 +33,8 @@
 	 * defines an interface layer for displays
 	 */
 	typedef struct DisplayInterfaceType {
+		uint32_t Width;
+		uint32_t Height;
 		void (*Open) (GenericComInterface * interface);
 		void (*Close) (uint_fast8_t cleanScreenFlag);
 		void (*Sync)(void);

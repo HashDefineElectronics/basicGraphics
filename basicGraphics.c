@@ -236,6 +236,30 @@ static void Flush(void) {
 }
 
 /**
+ * Sanitases the X and Y coordinates to ensure that it doesn't surpases the screen range
+ */
+static void SanitisePositionRange(int32_t *x, int32_t *y) {
+
+	if(!Driver || !Driver->SetPixel) {
+		return;
+	}
+
+	if(*x < 0) {
+		*x = 0;
+	}
+
+	if(*y < 0) {
+		*y = 0;
+	}
+	if(*x > (Driver->Width - 1)) {
+		*x = Driver->Width -1;
+	}
+
+	if(*y > (Driver->Height - 1)) {
+		*y = Driver->Height -1;
+	}
+}
+/**
  * This function implements the line drawing using Bresenham's line algorithm.
  *
  * @note This code was inspired by https://rosettacode.org/wiki/Bitmap/Bresenham%27s_line_algorithm#C
@@ -246,12 +270,15 @@ static void Flush(void) {
  * @param yEnd This is the Y end position.
  * @param colour the pixel colour value
  */
-static void drawLine(uint32_t xStart, uint32_t yStart, uint32_t xEnd, uint32_t yEnd, uint_fast8_t colour) {
+static void drawLine(int32_t xStart, int32_t yStart, int32_t xEnd, int32_t yEnd, uint_fast8_t colour) {
 
 	// make sure that have a driver that we can use
 	if(!Driver || !Driver->SetPixel) {
 		return;
 	}
+
+	SanitisePositionRange(&xStart, &yStart);
+	SanitisePositionRange(&xEnd, &yEnd);
 
 	// take the difference between the start and end axis
     int32_t DeltaX = abs(xEnd - xStart);
@@ -289,6 +316,101 @@ static void drawLine(uint32_t xStart, uint32_t yStart, uint32_t xEnd, uint32_t y
         }
     }
 }
+
+void drawRectagle(int32_t xStart, int32_t yStart, int32_t xEnd, int32_t yEnd, uint_fast8_t colour, uint_fast8_t fill) {
+	// make sure that have a driver that we can use
+	int32_t Counter;
+	int32_t Diff;
+	if(!Driver || !Driver->SetPixel) {
+		return;
+	}
+
+	SanitisePositionRange(&xStart, &yStart);
+	SanitisePositionRange(&xEnd, &yEnd);
+
+	if(fill) {
+		Diff = xEnd < xStart ? -1 : 1;
+
+		for( ;xEnd !=  xStart;) {
+			drawLine(xStart, yStart, xStart, yEnd, colour);
+			xStart += Diff;
+		}
+
+	} else {
+		drawLine(xStart, yStart, xStart, yEnd, colour);
+		drawLine(xStart, yStart, xEnd, yStart, colour);
+		drawLine(xEnd, yEnd, xEnd, yStart, colour);
+		drawLine(xEnd, yEnd, xStart, yEnd, colour);
+	}
+
+}
+/**
+ * @note this implementation was taken from https://en.wikipedia.org/wiki/Midpoint_circle_algorithm
+ *
+ * @param x0 circle's x position for its center.
+ * @param y0 circle's y position for its center.
+ * @param radius circle's radius
+ * @param colour the circle colour
+ * @param fill if true then fill else just draw the line
+ */
+void drawCircle(int32_t x0, int32_t y0, int32_t  radius, uint_fast8_t colour, uint_fast8_t fill) {
+	// make sure that have a driver that we can use
+	if(!Driver || !Driver->SetPixel) {
+		return;
+	}
+
+	SanitisePositionRange(&x0, &y0);
+
+	int32_t x = radius-1;
+	int32_t y = 0;
+	int32_t dx = 1;
+	int32_t dy = 1;
+	int32_t err = dx - (radius << 1);
+
+    while (x >= y) {
+
+
+    	if(fill) {
+			drawLine(x0 + x, y0 + y, x0 - x, y0 + y, colour);
+			drawLine(x0 + y, y0 + x, x0 - y, y0 + x, colour);
+			drawLine(x0 - x, y0 - y, x0 + x, y0 - y, colour);
+			drawLine(x0 - y, y0 - x, x0 + y, y0 - x, colour);
+    	} else {
+        	Driver->SetPixel(x0 + x, y0 + y, colour);
+        	Driver->SetPixel(x0 - x, y0 + y, colour);
+
+        	Driver->SetPixel(x0 + y, y0 + x, colour);
+        	Driver->SetPixel(x0 - y, y0 + x, colour);
+
+
+        	Driver->SetPixel(x0 - x, y0 - y, colour);
+        	Driver->SetPixel(x0 + x, y0 - y, colour);
+
+        	Driver->SetPixel(x0 - y, y0 - x, colour);
+        	Driver->SetPixel(x0 + y, y0 - x, colour);
+
+    	}
+
+        if (err <= 0) {
+            y++;
+            err += dy;
+            dy += 2;
+        }
+
+        if (err > 0) {
+            x--;
+            dx += 2;
+            err += dx - (radius << 1);
+        }
+    }
+}
+
+static void Fill(monotoneColour value) {
+	if(!Driver || !Driver->Fill) {
+		return;
+	}
+	Driver->Fill(value);
+}
 /**
  * This is our graphics instance
  */
@@ -299,5 +421,8 @@ SimpleGraphcisType GraphicsInstance = {
 		Flush: Flush,
 		WriteString: WriteString,
 		GetStringBounds: getStringBounds,
-		drawLine: drawLine
+		drawLine: drawLine,
+		drawCircle: drawCircle,
+		drawRectagle: drawRectagle,
+		Fill: Fill
 };
