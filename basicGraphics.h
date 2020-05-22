@@ -42,6 +42,7 @@
 	typedef struct SimpleGraphcisType {
 		void (*Init) (DisplayInterfaceType * driver, const GFXfont * font);
 		void (*Destroy) (void);
+		void (*Reset) (uint_fast8_t resetBuffer);
 		void (*Clear)(void);
 		void (*Flush)(void);
 		void (*WriteString)(uint8_t * text, uint32_t xPos, uint32_t yPos, uint_fast8_t colour, const GFXfont * fontToUse);
@@ -50,6 +51,7 @@
 		void (*drawCircle)(int32_t x0, int32_t y0, int32_t radius, uint_fast8_t colour, uint_fast8_t fill);
 		void (*drawRectagle)(int32_t xStart, int32_t yStart, int32_t xEnd, int32_t yEnd, uint_fast8_t colour, uint_fast8_t fill);
 		void (*Fill)(monotoneColour value);
+		void (*Update)(void);
 	} SimpleGraphcisType;
 
 

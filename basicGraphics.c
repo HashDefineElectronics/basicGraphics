@@ -411,11 +411,17 @@ static void Fill(monotoneColour value) {
 	}
 	Driver->Fill(value);
 }
+
+static void Reset(uint_fast8_t resetBuffer) {
+	Driver->Reset(resetBuffer);
+}
+
 /**
  * This is our graphics instance
  */
 SimpleGraphcisType GraphicsInstance = {
 		Init: Init,
+		Reset: Reset,
 		Destroy: Destroy,
 		Clear: Clear,
 		Flush: Flush,
