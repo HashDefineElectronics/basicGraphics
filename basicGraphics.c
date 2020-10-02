@@ -7,6 +7,7 @@
  * This is the a simple graphics library for drawing primitives, fonts and bitmaps
  */
 #include "basicGraphics.h"
+#include <stdlib.h>
 
 /**
  * Holds the current fonts
@@ -31,6 +32,46 @@ static void Init(DisplayInterfaceType * driver, const GFXfont * font) {
 	Driver = driver;
 }
 
+
+static void getStringJustificationPos(basicStringBoundType * TextBounds, GraphicsTextPostEnumType justification, uint32_t containerWidth, uint32_t containerHeight) {
+
+	switch(justification) {
+		case Text_Center:
+
+			if(containerWidth) {
+				TextBounds->y = ((containerWidth - TextBounds->width) / 2);
+			}
+
+			if(containerHeight) {
+				TextBounds->x = ((containerHeight + TextBounds->height) / 2);
+			}
+			
+		break;
+		case Text_Left:
+			
+			if(containerWidth) {
+				TextBounds->y = 0;
+			}
+
+			if(containerHeight) {
+				TextBounds->x = 0;
+			}
+
+		break;
+		case Text_Right:
+			
+			if(containerWidth) {
+				TextBounds->y = (containerWidth - TextBounds->width);
+			}
+
+			if(containerHeight) {
+				TextBounds->x = (containerHeight - TextBounds->height);
+			}
+
+		break;
+	}
+
+}
 /**
  * this function will return the give text height and width bound.
  *
@@ -44,15 +85,13 @@ static void getStringBounds(uint8_t * text, const GFXfont * font, basicStringBou
 	uint8_t TempChar;
 	GFXfont * Font = font;
 
-	uint32_t YTemp;
-	uint32_t XTemp;
+	uint32_t YTemp = 0;
+	uint32_t XTemp = 0;
 
 	bounds->x = 0;
 	bounds->y = 0;
-	bounds->xMin = 0;
-	bounds->yMin = 0;
-	bounds->xMax = 0;
-	bounds->yMax = 0;
+	bounds->width = 0;
+	bounds->height = 0;
 
 	if(!bounds) {
 		return;
@@ -75,25 +114,9 @@ static void getStringBounds(uint8_t * text, const GFXfont * font, basicStringBou
 			TempChar -= Font->first;
 			Glyph  = &Font->glyph[TempChar];
 
-			XTemp = bounds->x + Glyph->xOffset;
-			if(XTemp < bounds->xMin) {
-				 bounds->xMin = XTemp;
-			}
-
-			XTemp += Glyph->width;
-			if(XTemp > bounds->xMax) {
-				 bounds->xMax = XTemp;
-			}
-			bounds->x += Glyph->xAdvance;
-
-			YTemp = bounds->y +  Glyph->yOffset;
-			if(YTemp < bounds->yMin) {
-				 bounds->yMin = YTemp;
-			}
-
-			YTemp += Glyph->height;
-			if(YTemp > bounds->yMax) {
-				 bounds->yMax = YTemp;
+			bounds->width += Glyph->xAdvance;
+			if(bounds->height < Glyph->height) {
+				bounds->height = Glyph->height;
 			}
 		}
 
@@ -405,6 +428,44 @@ void drawCircle(int32_t x0, int32_t y0, int32_t  radius, uint_fast8_t colour, ui
     }
 }
 
+/**
+* this is the data size for the icon array
+*/
+static const uint_fast8_t IconDataBitSize = 32;
+
+/**
+* Draw an icon
+* 
+* @param x start position x
+* @param y start position x
+* @param height icon height
+* @param width icon width
+* @param source	pointer to the data array
+*/
+static void drawIcon(int32_t x, int32_t y, uint32_t height, uint32_t width, uint_fast8_t colour, uint32_t *source) {
+	uint32_t HeightIndex;
+	uint32_t WidthIndex;
+	uint32_t BitIndex = 0;
+	uint32_t Value = *source;
+
+	for(WidthIndex = 0 ; WidthIndex <= width; WidthIndex++) {
+		for(HeightIndex = 0 ;HeightIndex <= height; HeightIndex++) {
+			
+			Driver->SetPixel(x + HeightIndex, y + WidthIndex, (Value & 0x80000000) ? colour : 0);
+
+			if(BitIndex < IconDataBitSize) {
+				BitIndex++;
+				Value = Value << 1;
+			} else {
+				BitIndex = 0;
+				source++;
+				Value = *source;
+			}
+			
+		}
+	}
+}
+
 static void Fill(monotoneColour value) {
 	if(!Driver || !Driver->Fill) {
 		return;
@@ -427,8 +488,10 @@ SimpleGraphcisType GraphicsInstance = {
 		Flush: Flush,
 		WriteString: WriteString,
 		GetStringBounds: getStringBounds,
+		getStringJustificationPos : getStringJustificationPos,
 		drawLine: drawLine,
 		drawCircle: drawCircle,
 		drawRectagle: drawRectagle,
+		drawIcon : drawIcon,
 		Fill: Fill
 };

@@ -16,15 +16,22 @@
 	#include "displayDriver.h"
 
 	/**
+	 * this is the justification of a text
+	 */
+	typedef enum {
+		Text_Left = 0,
+		Text_Right,
+		Text_Center,
+	} GraphicsTextPostEnumType;
+
+	/**
 	 * defines the data structure for working out the a string bound based on a given font
 	 */
 	typedef struct {
-		uint32_t x;
-		uint32_t y;
-		uint32_t xMin;
-		uint32_t yMin;
-		uint32_t xMax;
-		uint32_t yMax;
+		uint32_t x;			///< x start position of the string
+		uint32_t y;			///< x start position of the string
+		uint32_t width;		///< the complete string width
+		uint32_t height;	///< the complete string height
 	} basicStringBoundType;
 
 	/**
@@ -47,9 +54,11 @@
 		void (*Flush)(void);
 		void (*WriteString)(uint8_t * text, uint32_t xPos, uint32_t yPos, uint_fast8_t colour, const GFXfont * fontToUse);
 		void (*GetStringBounds)(uint8_t * text, const GFXfont * font, basicStringBoundType * bounds);
+		void (*getStringJustificationPos)(basicStringBoundType * TextBounds, GraphicsTextPostEnumType justification, uint32_t containerWidth, uint32_t containerHeight);
 		void (*drawLine)(int32_t xStart, int32_t yStart, int32_t xEnd, int32_t yEnd, uint_fast8_t colour);
 		void (*drawCircle)(int32_t x0, int32_t y0, int32_t radius, uint_fast8_t colour, uint_fast8_t fill);
 		void (*drawRectagle)(int32_t xStart, int32_t yStart, int32_t xEnd, int32_t yEnd, uint_fast8_t colour, uint_fast8_t fill);
+		void (*drawIcon) (int32_t x, int32_t y, uint32_t height, uint32_t width, uint_fast8_t colour, uint32_t *source);
 		void (*Fill)(monotoneColour value);
 		void (*Update)(void);
 	} SimpleGraphcisType;
