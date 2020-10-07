@@ -53,7 +53,7 @@
 		void (*Clear)(void);
 		void (*Flush)(void);
 		void (*WriteString)(uint8_t * text, uint32_t xPos, uint32_t yPos, uint_fast8_t colour, const GFXfont * fontToUse);
-		void (*GetStringBounds)(uint8_t * text, const GFXfont * font, basicStringBoundType * bounds);
+		void (*GetStringBounds)(uint8_t * text, GFXfont * font, basicStringBoundType * bounds);
 		void (*getStringJustificationPos)(basicStringBoundType * TextBounds, GraphicsTextPostEnumType justification, uint32_t containerWidth, uint32_t containerHeight);
 		void (*drawLine)(int32_t xStart, int32_t yStart, int32_t xEnd, int32_t yEnd, uint_fast8_t colour);
 		void (*drawCircle)(int32_t x0, int32_t y0, int32_t radius, uint_fast8_t colour, uint_fast8_t fill);

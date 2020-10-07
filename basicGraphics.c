@@ -8,6 +8,7 @@
  */
 #include "basicGraphics.h"
 #include <stdlib.h>
+#include "../../common.h"
 
 /**
  * Holds the current fonts
@@ -79,7 +80,7 @@ static void getStringJustificationPos(basicStringBoundType * TextBounds, Graphic
  * @param font is the font pointer
  * @param bounds pointer to return the new bound values
  */
-static void getStringBounds(uint8_t * text, const GFXfont * font, basicStringBoundType * bounds) {
+static void getStringBounds(uint8_t * text, GFXfont * font, basicStringBoundType * bounds) {
 	GFXglyph *Glyph;
 	uint8_t  *Bitmap;
 	uint8_t TempChar;
@@ -105,6 +106,9 @@ static void getStringBounds(uint8_t * text, const GFXfont * font, basicStringBou
 		Font = CurrentFont;
 	}
 
+
+	bounds->height = Font->yAdvance;
+
 	while(*text) {
 		TempChar = *text;
 
@@ -115,12 +119,13 @@ static void getStringBounds(uint8_t * text, const GFXfont * font, basicStringBou
 			Glyph  = &Font->glyph[TempChar];
 
 			bounds->width += Glyph->xAdvance;
-			if(bounds->height < Glyph->height) {
-				bounds->height = Glyph->height;
-			}
 		}
 
 		text++;
+	}
+
+	if(Driver && bounds->width > Driver->Width) {
+		bounds->width = Driver->Width;
 	}
 }
 /**
@@ -448,8 +453,8 @@ static void drawIcon(int32_t x, int32_t y, uint32_t height, uint32_t width, uint
 	uint32_t BitIndex = 0;
 	uint32_t Value = *source;
 
-	for(WidthIndex = 0 ; WidthIndex <= width; WidthIndex++) {
-		for(HeightIndex = 0 ;HeightIndex <= height; HeightIndex++) {
+	for(WidthIndex = 0 ; WidthIndex < width; WidthIndex++) {
+		for(HeightIndex = 0 ;HeightIndex < height; HeightIndex++) {
 			
 			Driver->SetPixel(x + HeightIndex, y + WidthIndex, (Value & 0x80000000) ? colour : 0);
 
