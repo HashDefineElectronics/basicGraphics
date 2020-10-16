@@ -107,7 +107,7 @@ static void getStringBounds(uint8_t * text, GFXfont * font, basicStringBoundType
 	}
 
 
-	bounds->height = Font->yAdvance;
+	bounds->height = Font->maxHeight;
 
 	while(*text) {
 		TempChar = *text;
