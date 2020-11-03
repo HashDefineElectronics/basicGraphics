@@ -8,7 +8,7 @@
  */
 #include "basicGraphics.h"
 #include <stdlib.h>
-#include "../../common.h"
+#include "../common.h"
 
 /**
  * Holds the current fonts
