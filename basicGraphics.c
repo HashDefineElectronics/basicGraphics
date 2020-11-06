@@ -8,7 +8,7 @@
  */
 #include "basicGraphics.h"
 #include <stdlib.h>
-#include "../../common.h"
+#include "../common.h"
 
 /**
  * Holds the current fonts
@@ -153,8 +153,8 @@ static GraphicsReturnType renderCharacter(	GFXglyph *glyph,
 	uint_fast8_t Height = glyph->height;
 	uint_fast8_t Width = glyph->width;
 
-	uint32_t xOffset = glyph->xOffset;
-	uint32_t yOffset = glyph->yOffset;
+	int32_t xOffset = glyph->xOffset;
+	int32_t yOffset = glyph->yOffset;
 
 	uint8_t  BitIndex = 0;
 
@@ -162,8 +162,8 @@ static GraphicsReturnType renderCharacter(	GFXglyph *glyph,
 	// this has the section of bits that make up the character.
 	uint8_t Segment = 0;
 
-	uint32_t YIndex;
-	uint32_t XIndex;
+	int32_t YIndex;
+	int32_t XIndex;
 
 
 	/// @Todo Add character clipping here
@@ -471,7 +471,7 @@ static void drawIcon(int32_t x, int32_t y, uint32_t height, uint32_t width, uint
 	}
 }
 
-static void Fill(monotoneColour value) {
+static void Fill(uint8_t value) {
 	if(!Driver || !Driver->Fill) {
 		return;
 	}

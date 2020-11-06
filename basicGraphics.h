@@ -59,7 +59,7 @@
 		void (*drawCircle)(int32_t x0, int32_t y0, int32_t radius, uint_fast8_t colour, uint_fast8_t fill);
 		void (*drawRectagle)(int32_t xStart, int32_t yStart, int32_t xEnd, int32_t yEnd, uint_fast8_t colour, uint_fast8_t fill);
 		void (*drawIcon) (int32_t x, int32_t y, uint32_t height, uint32_t width, uint_fast8_t colour, uint32_t *source);
-		void (*Fill)(monotoneColour value);
+		void (*Fill)(uint8_t value);
 		void (*Update)(void);
 	} SimpleGraphcisType;
 

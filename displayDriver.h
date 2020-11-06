@@ -11,17 +11,6 @@
 	#include <stdint.h>
 
 	/**
-	 * defines the monotone colour type
-	 */
-	typedef enum monotoneColour {
-		ColourOff = 0,
-		ColourMid = 0x07,
-		ColourOn = 0x0F
-		//ColourMid = 0x03,
-		//ColourOn = 0x07
-	} monotoneColour;
-
-	/**
 	 * Creates a common comm interface
 	 */
 	typedef struct GenericComInterface {
@@ -43,7 +32,7 @@
 		void (*Sync)(void);
 		void (*SetPixel)(uint32_t x, uint32_t y, uint8_t value);
 		void (*Clear)(void);
-		void (*Fill)(monotoneColour value);
+		void (*Fill)(uint8_t value);
 	} DisplayInterfaceType;
 
 
