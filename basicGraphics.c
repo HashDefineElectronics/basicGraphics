@@ -103,7 +103,7 @@ static void getStringBounds(uint8_t * text, GFXfont * font, basicStringBoundType
 			/// @TODO return invalid pointer error
 			return;
 		}
-		Font = CurrentFont;
+		Font = (GFXfont *)CurrentFont;
 	}
 
 
@@ -200,7 +200,7 @@ static void WriteString(uint8_t * text, uint32_t xPos, uint32_t yPos, uint_fast8
 	GFXglyph *Glyph;
 	uint8_t  *Bitmap;
 	uint8_t TempChar;
-	GFXfont * Font = fontToUse;
+	GFXfont * Font = (GFXfont *)fontToUse;
 
 	if(!CurrentFont || !Driver || !Driver->SetPixel) {
 		/// @TODO return invalid pointer error
@@ -208,7 +208,7 @@ static void WriteString(uint8_t * text, uint32_t xPos, uint32_t yPos, uint_fast8
 	}
 
 	if(!Font) {
-		Font = CurrentFont;
+		Font = (GFXfont *)CurrentFont;
 	}
 
 	while(*text) {
