@@ -439,6 +439,17 @@ void drawCircle(int32_t x0, int32_t y0, int32_t  radius, uint_fast8_t colour, ui
 static const uint_fast8_t IconDataBitSize = 32;
 
 /**
+ * Draws directly into the screen buffer. the image should be the same size as the screen buffer
+ */
+static void drawFullScreen(uint8_t *source) {
+
+	if(Driver->directWriteToBuffer) {
+		Driver->directWriteToBuffer(source);
+	}
+
+}
+
+/**
 * Draw an icon
 * 
 * @param x start position x
@@ -456,9 +467,9 @@ static void drawIcon(int32_t x, int32_t y, uint32_t height, uint32_t width, uint
 	for(WidthIndex = 0 ; WidthIndex < width; WidthIndex++) {
 		for(HeightIndex = 0 ;HeightIndex < height; HeightIndex++) {
 			
-			Driver->SetPixel(x + HeightIndex, y + WidthIndex, (Value & 0x80000000) ? colour : 0);
+			Driver->SetPixel(x + WidthIndex, y + HeightIndex, (Value & 0x80000000) ? colour : 0);
 
-			if(BitIndex < IconDataBitSize) {
+			if(BitIndex < (IconDataBitSize -1)) {
 				BitIndex++;
 				Value = Value << 1;
 			} else {
@@ -498,5 +509,6 @@ SimpleGraphcisType GraphicsInstance = {
 		drawCircle: drawCircle,
 		drawRectagle: drawRectagle,
 		drawIcon : drawIcon,
+		drawFullScreen : drawFullScreen,
 		Fill: Fill
 };

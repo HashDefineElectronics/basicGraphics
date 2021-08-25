@@ -31,6 +31,7 @@
 		void (*Close) (uint_fast8_t cleanScreenFlag);
 		void (*Sync)(void);
 		void (*SetPixel)(uint32_t x, uint32_t y, uint8_t value);
+		void (*directWriteToBuffer)(uint8_t * source);
 		void (*Clear)(void);
 		void (*Fill)(uint8_t value);
 	} DisplayInterfaceType;
