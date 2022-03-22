@@ -34,6 +34,8 @@
 		void (*directWriteToBuffer)(uint8_t * source);
 		void (*Clear)(void);
 		void (*Fill)(uint8_t value);
+		/** This is used for debug only **/
+		uint32_t (*GetDisplayBuffer)(uint8_t **destinationPointer);
 	} DisplayInterfaceType;
 
 
