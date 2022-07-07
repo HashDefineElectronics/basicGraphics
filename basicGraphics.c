@@ -40,33 +40,33 @@ static void getStringJustificationPos(basicStringBoundType * TextBounds, Graphic
 		case Text_Center:
 
 			if(containerWidth) {
-				TextBounds->y = ((containerWidth - TextBounds->width) / 2);
+				TextBounds->x = ((containerWidth - TextBounds->width) / 2);
 			}
 
 			if(containerHeight) {
-				TextBounds->x = ((containerHeight + TextBounds->height) / 2);
+				TextBounds->y = ((containerHeight + TextBounds->height) / 2);
 			}
 			
 		break;
 		case Text_Left:
 			
 			if(containerWidth) {
-				TextBounds->y = 0;
+				TextBounds->x = 0;
 			}
 
 			if(containerHeight) {
-				TextBounds->x = 0;
+				TextBounds->y = 0;
 			}
 
 		break;
 		case Text_Right:
 			
 			if(containerWidth) {
-				TextBounds->y = (containerWidth - TextBounds->width);
+				TextBounds->x = (containerWidth - TextBounds->width);
 			}
 
 			if(containerHeight) {
-				TextBounds->x = (containerHeight - TextBounds->height);
+				TextBounds->y = (containerHeight - TextBounds->height);
 			}
 
 		break;
