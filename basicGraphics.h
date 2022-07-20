@@ -22,6 +22,10 @@
 		Text_Left = 0,
 		Text_Right,
 		Text_Center,
+		Text_LeftCenter,
+		Text_RightCenter,
+		Text_LeftTop,
+		Text_RightTop,
 	} GraphicsTextPostEnumType;
 
 	/**

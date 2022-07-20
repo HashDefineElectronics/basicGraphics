@@ -36,40 +36,54 @@ static void Init(DisplayInterfaceType * driver, const GFXfont * font) {
 
 static void getStringJustificationPos(basicStringBoundType * TextBounds, GraphicsTextPostEnumType justification, uint32_t containerWidth, uint32_t containerHeight) {
 
-	switch(justification) {
-		case Text_Center:
+	if(containerWidth) {
 
-			if(containerWidth) {
+		switch(justification) {
+			case Text_Center:
 				TextBounds->x = ((containerWidth - TextBounds->width) / 2);
-			}
+			break;
 
-			if(containerHeight) {
-				TextBounds->y = ((containerHeight + TextBounds->height) / 2);
-			}
+
+
+			case Text_Right:
+			case Text_RightCenter:
+			case Text_RightTop:
+				 TextBounds->x = (containerWidth - TextBounds->width);
+			break;
 			
-		break;
-		case Text_Left:
 			
-			if(containerWidth) {
+			case Text_Left:
+			case Text_LeftCenter:
+			case Text_LeftTop:
+			default:
 				TextBounds->x = 0;
-			}
+			break;
+		}
+	}
 
-			if(containerHeight) {
-				TextBounds->y = 0;
-			}
 
-		break;
-		case Text_Right:
-			
-			if(containerWidth) {
-				TextBounds->x = (containerWidth - TextBounds->width);
-			}
+	if(containerHeight) {
 
-			if(containerHeight) {
-				TextBounds->y = (containerHeight - TextBounds->height);
-			}
+		switch(justification) {
+			case Text_Center:
+			case Text_LeftCenter:
+			case Text_RightCenter:
+				TextBounds->y = ((containerHeight + TextBounds->height) / 2);
+			break;
 
-		break;
+			case Text_RightTop:
+			case Text_LeftTop:
+				 TextBounds->y = 0;
+			break;
+
+			case Text_Right:
+			case Text_Left:
+			default:
+			// default to bottom
+				 TextBounds->y = containerHeight;
+			break;
+		}
+
 	}
 
 }
