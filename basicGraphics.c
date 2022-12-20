@@ -37,7 +37,9 @@ static void Init(DisplayInterfaceType * driver, const GFXfont * font) {
 static void getStringJustificationPos(basicStringBoundType * TextBounds, GraphicsTextPostEnumType justification, uint32_t containerWidth, uint32_t containerHeight) {
 
 	if(containerWidth) {
-
+		if(containerWidth < TextBounds->width) {
+			containerWidth = TextBounds->width;
+		}
 		switch(justification) {
 			case Text_Center:
 				TextBounds->x = ((containerWidth - TextBounds->width) / 2);
@@ -64,10 +66,15 @@ static void getStringJustificationPos(basicStringBoundType * TextBounds, Graphic
 
 	if(containerHeight) {
 
+
+
 		switch(justification) {
 			case Text_Center:
 			case Text_LeftCenter:
 			case Text_RightCenter:
+				if(containerHeight < TextBounds->height) {
+					containerHeight = TextBounds->height;
+				}
 				TextBounds->y = ((containerHeight + TextBounds->height) / 2);
 			break;
 
