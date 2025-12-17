@@ -35,7 +35,7 @@
 		void (*Clear)(void);
 		void (*Fill)(uint8_t value);
 		/** This is used for debug only **/
-		uint32_t (*GetDisplayBuffer)(uint8_t **destinationPointer);
+		uint32_t (*GetDisplayBuffer)(uint8_t *destinationPointer);
 		void (*setBrightness)(uint8_t value);
 	} DisplayInterfaceType;
 
